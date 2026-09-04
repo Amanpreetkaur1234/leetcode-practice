@@ -1,0 +1,50 @@
+/**
+ * @param {number} n
+ * @return {string[][]}
+ */
+var solveNQueens = function(n) {
+    const result = [];
+    const board = Array.from({ length: n }, () => Array(n).fill('.'));
+
+    // Sets to track attacked columns and diagonals
+    const columns = new Set();
+    const diagonal1 = new Set(); // row - col
+    const diagonal2 = new Set(); // row + col
+
+    function backtrack(row) {
+        // All queens placed successfully
+        if (row === n) {
+            result.push(board.map(row => row.join('')));
+            return;
+        }
+
+        for (let col = 0; col < n; col++) {
+            // Check if the position is under attack
+            if (
+                columns.has(col) ||
+                diagonal1.has(row - col) ||
+                diagonal2.has(row + col)
+            ) {
+                continue;
+            }
+
+            // Place queen
+            board[row][col] = 'Q';
+            columns.add(col);
+            diagonal1.add(row - col);
+            diagonal2.add(row + col);
+
+            // Move to next row
+            backtrack(row + 1);
+
+            // Backtrack: remove queen
+            board[row][col] = '.';
+            columns.delete(col);
+            diagonal1.delete(row - col);
+            diagonal2.delete(row + col);
+        }
+    }
+
+    backtrack(0);
+    return result;
+};
