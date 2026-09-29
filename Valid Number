@@ -1,0 +1,58 @@
+ #include <stdbool.h>
+#include <ctype.h>
+
+bool isNumber(char* s) {
+    int i = 0;
+    bool digitSeen = false;
+    bool digitAfterE = true;
+
+    // Optional sign
+    if (s[i] == '+' || s[i] == '-') {
+        i++;
+    }
+
+    // Number before exponent
+    while (isdigit(s[i])) {
+        digitSeen = true;
+        i++;
+    }
+
+    // Decimal part
+    if (s[i] == '.') {
+        i++;
+
+        while (isdigit(s[i])) {
+            digitSeen = true;
+            i++;
+        }
+    }
+
+    // If no digit before or after decimal point
+    if (!digitSeen) {
+        return false;
+    }
+
+    // Exponent part
+    if (s[i] == 'e' || s[i] == 'E') {
+        i++;
+
+        // Optional exponent sign
+        if (s[i] == '+' || s[i] == '-') {
+            i++;
+        }
+
+        digitAfterE = false;
+
+        while (isdigit(s[i])) {
+            digitAfterE = true;
+            i++;
+        }
+
+        if (!digitAfterE) {
+            return false;
+        }
+    }
+
+    // Entire string must be consumed
+    return s[i] == '\0';
+}
